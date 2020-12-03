@@ -140,6 +140,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  updateLCD();
+	  heaterLED();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
