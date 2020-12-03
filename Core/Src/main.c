@@ -46,7 +46,8 @@ ADC_HandleTypeDef hadc1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-int channel_0;
+int channel_0 = 0;
+int setTemp = 15;
 
 /* USER CODE END PV */
 
@@ -106,6 +107,8 @@ int main(void)
   MX_USART2_UART_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
+
+  TextLCD_Init(&LCD, GPIOB, LCD_RS_Pin, LCD_RW_Pin, LCD_E_Pin, GPIOC);	// LCD initialise
 
   /* USER CODE END 2 */
 
@@ -320,6 +323,23 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+// Buttons
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	if(GPIO_Pin == BTN_DOWN_Pin){
+		setTemp-=1;
+
+		if(setTemp < 15)
+			setTemp = 15;
+	}
+
+	if(GPIO_Pin == BTN_DOWN_Pin){
+		setTemp+=1;
+
+		if(setTemp >30)
+			setTemp = 30;
+	}
+}
 
 /* USER CODE END 4 */
 
