@@ -48,6 +48,7 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 int channel_0 = 0;
 int setTemp = 15;
+int temperature = 0;
 
 /* USER CODE END PV */
 
@@ -72,6 +73,19 @@ int16_t ReadAnalogTemp(){
 	// thermistor resistance
 
 	// calculate temperature
+}
+
+void heaterLED(){
+	if(temperature < setTemp){
+		// turn on LEDs
+		HAL_GPIO_WritePin(LED_HEATER_1_GPIO_Port, LED_HEATER_1_Pin, SET);
+		HAL_GPIO_WritePin(LED_HEATER_2_GPIO_Port, LED_HEATER_2_Pin, SET);
+	}
+	else{
+		// LEDs off
+		HAL_GPIO_WritePin(LED_HEATER_1_GPIO_Port, LED_HEATER_1_Pin, RESET);
+	    HAL_GPIO_WritePin(LED_HEATER_2_GPIO_Port, LED_HEATER_2_Pin, RESET);
+	}
 }
 
 /* USER CODE END 0 */
@@ -333,10 +347,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 			setTemp = 15;
 	}
 
-	if(GPIO_Pin == BTN_DOWN_Pin){
+	if(GPIO_Pin == BTN_UP_Pin){
 		setTemp+=1;
 
-		if(setTemp >30)
+		if(setTemp > 30)
 			setTemp = 30;
 	}
 }
