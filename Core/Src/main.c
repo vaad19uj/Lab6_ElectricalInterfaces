@@ -88,6 +88,16 @@ void heaterLED(){
 	}
 }
 
+void updateLCD(){
+	// print out temperature
+
+	// thermistor
+
+	// DHT11
+
+	// set temperature
+}
+
 /* USER CODE END 0 */
 
 /**
