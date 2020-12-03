@@ -90,7 +90,7 @@ void heaterLED(){
 }
 
 void updateLCD(){
-	// print out temperature
+	// print out values on LCD
 
 	// thermistor
 
