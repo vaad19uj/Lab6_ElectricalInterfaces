@@ -49,6 +49,7 @@ UART_HandleTypeDef huart2;
 int channel_0 = 0;
 int setTemp = 15;
 int temperature = 0;
+TextLCDType LCD;
 
 /* USER CODE END PV */
 
