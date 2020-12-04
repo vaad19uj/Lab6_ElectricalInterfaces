@@ -50,7 +50,7 @@ UART_HandleTypeDef huart2;
 int channel_0 = 0;
 int setTemp = 15;
 int DHT11Temp = 0;
-int thermistorTemp;
+int thermistorTemp = 0;
 TextLCDType LCD;
 
 uint16_t DHT11_timeout = 10000;
@@ -174,8 +174,6 @@ char* intToString(int digit){
 
 void updateLCD(){
 	// print out values on LCD
-
-	int thermistorTemp = 0;
 
 	// position 0
 	TextLCD_Clear(&LCD);
