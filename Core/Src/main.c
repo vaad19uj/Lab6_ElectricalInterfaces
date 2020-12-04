@@ -178,6 +178,10 @@ void updateLCD(){
 	// position 0
 	TextLCD_Clear(&LCD);
 
+	// set temperature
+	TextLCD_Puts(&LCD, " set: ");
+	TextLCD_Puts(&LCD, intToString(setTemp));
+
 	// thermistor
 	TextLCD_Puts(&LCD, "th: ");
 	TextLCD_Puts(&LCD, intToString(thermistorTemp));
@@ -185,10 +189,6 @@ void updateLCD(){
 	// DHT11
 	TextLCD_Puts(&LCD, " DHT: ");
 	TextLCD_Puts(&LCD, intToString(DHT11Temp));
-
-	// set temperature
-	TextLCD_Puts(&LCD, " set: ");
-	TextLCD_Puts(&LCD, intToString(setTemp));
 }
 
 /* USER CODE END 0 */
