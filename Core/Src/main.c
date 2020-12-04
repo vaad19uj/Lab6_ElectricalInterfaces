@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "LCD.h"
+#include <stdlib.h>
 
 /* USER CODE END Includes */
 
@@ -48,12 +49,14 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 int channel_0 = 0;
 int setTemp = 15;
-int temperature = 0;
+int DHT11Temp = 0;
+int thermistorTemp;
 TextLCDType LCD;
 
 uint16_t DHT11_timeout = 10000;
 int16_t DHT11_buff_raw[41];
 uint8_t DHT11_data[5];
+char buff[2];
 
 /* USER CODE END PV */
 
@@ -152,7 +155,7 @@ int16_t Read_DHT11(){
 
 
 void heaterLED(){
-	if(temperature < setTemp){
+	if(DHT11Temp < setTemp){
 		// turn on LEDs
 		HAL_GPIO_WritePin(LED_HEATER_1_GPIO_Port, LED_HEATER_1_Pin, SET);
 		HAL_GPIO_WritePin(LED_HEATER_2_GPIO_Port, LED_HEATER_2_Pin, SET);
@@ -164,14 +167,30 @@ void heaterLED(){
 	}
 }
 
+char* digitToASCII(int digit){
+	itoa(digit, buff, 10);
+	return buff;
+}
+
 void updateLCD(){
 	// print out values on LCD
 
+	int thermistorTemp = 0;
+
+	// position 0
+	TextLCD_Clear(&LCD);
+
 	// thermistor
+	TextLCD_Puts(&LCD, "th: ");
+	TextLCD_Puts(&LCD, digitToASCII(thermistorTemp));
 
 	// DHT11
+	TextLCD_Puts(&LCD, " DHT: ");
+	TextLCD_Puts(&LCD, digitToASCII(DHT11Temp));
 
 	// set temperature
+	TextLCD_Puts(&LCD, " set: ");
+	TextLCD_Puts(&LCD, digitToASCII(setTemp));
 }
 
 /* USER CODE END 0 */
