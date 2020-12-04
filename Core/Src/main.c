@@ -83,7 +83,7 @@ int16_t ReadAnalogTemp(){
 int16_t Read_DHT11_bit_raw(){
 	uint16_t cnt_low = 0;
 
-	while(HAL_GPIO_ReadPin(DHT11_GPIO_Port, DHT11_Pin_Pin) == 0){
+	while(HAL_GPIO_ReadPin(DHT11_GPIO_Port, DHT11_Pin) == 0){
 		cnt_low ++;
 		if(cnt_low >= DHT11_timeout){
 			return DHT11_timeout;
@@ -92,7 +92,7 @@ int16_t Read_DHT11_bit_raw(){
 
 	uint16_t cnt_high = 0;
 
-	while(HAL_GPIO_ReadPin(DHT11_GPIO_Port, DHT11_Pin_Pin) == 1){
+	while(HAL_GPIO_ReadPin(DHT11_GPIO_Port, DHT11_Pin) == 1){
 		cnt_high ++;
 		if(cnt_high >= DHT11_timeout){
 			return DHT11_timeout;
@@ -118,9 +118,38 @@ int16_t Read_DHT11(){
 	}
 
 	for(uint8_t k = 0; k<41; k++){
-
+		DHT11_buff_raw[k] = Read_DHT11_bit_raw();
 	}
+
+	uint8_t val;
+	for(uint8_t byte = 0; byte < 5; byte++){
+		val = 0;
+		for(uint8_t bit = 0; bit<8; bit++){
+			if(DHT11_buff_raw[(byte << 3) +bit+1] >= DHT11_timeout){
+				return -99;
+			}
+
+			val= val <<1;
+
+			if(DHT11_buff_raw[(byte << 3)+bit+1]>0){
+				val= val | 0x01;
+			}
+		}
+		DHT11_data[byte] = val;
+	}
+
+	uint8_t sum = 0;
+	for(uint8_t byte=0; byte < 4; byte++){
+		sum+= DHT11_data[byte];
+	}
+
+	if(sum != DHT11_data[4]){
+		return -99;
+	}
+
+	return DHT11_data[2];
 }
+
 
 void heaterLED(){
 	if(temperature < setTemp){
