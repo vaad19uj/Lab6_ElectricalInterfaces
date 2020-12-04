@@ -168,6 +168,7 @@ void heaterLED(){
 }
 
 char* intToString(int digit){
+	// snprintf
 	itoa(digit, buff, 10);
 	return buff;
 }
