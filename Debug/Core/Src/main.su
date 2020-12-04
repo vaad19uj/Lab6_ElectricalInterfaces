@@ -2,7 +2,7 @@ main.c:74:9:ReadAnalogTemp	8	static
 main.c:86:9:Read_DHT11_bit_raw	16	static
 main.c:108:9:Read_DHT11	24	static
 main.c:157:6:heaterLED	8	static
-main.c:170:7:digitToASCII	16	static
+main.c:170:7:intToString	16	static
 main.c:175:6:updateLCD	16	static
 main.c:202:5:main	16	static
 main.c:251:6:SystemClock_Config	88	static

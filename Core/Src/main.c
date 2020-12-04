@@ -167,7 +167,7 @@ void heaterLED(){
 	}
 }
 
-char* digitToASCII(int digit){
+char* intToString(int digit){
 	itoa(digit, buff, 10);
 	return buff;
 }
@@ -182,15 +182,15 @@ void updateLCD(){
 
 	// thermistor
 	TextLCD_Puts(&LCD, "th: ");
-	TextLCD_Puts(&LCD, digitToASCII(thermistorTemp));
+	TextLCD_Puts(&LCD, intToString(thermistorTemp));
 
 	// DHT11
 	TextLCD_Puts(&LCD, " DHT: ");
-	TextLCD_Puts(&LCD, digitToASCII(DHT11Temp));
+	TextLCD_Puts(&LCD, intToString(DHT11Temp));
 
 	// set temperature
 	TextLCD_Puts(&LCD, " set: ");
-	TextLCD_Puts(&LCD, digitToASCII(setTemp));
+	TextLCD_Puts(&LCD, intToString(setTemp));
 }
 
 /* USER CODE END 0 */

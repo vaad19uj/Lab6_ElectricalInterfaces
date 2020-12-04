@@ -39,9 +39,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  17 .debug_line   000067d7  00000000  00000000  0004005e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    00088237  00000000  00000000  00046835  2**0
+ 18 .debug_str    00088236  00000000  00000000  00046835  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  000cea6c  2**0
+ 19 .comment      0000007b  00000000  00000000  000cea6b  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00001e14  00000000  00000000  000ceae8  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -759,20 +759,20 @@ void heaterLED(){
  8000734:	20000000 	.word	0x20000000
  8000738:	40020400 	.word	0x40020400
 
-0800073c <digitToASCII>:
+0800073c <intToString>:
 
-char* digitToASCII(int digit){
+char* intToString(int digit){
  800073c:	b580      	push	{r7, lr}
  800073e:	b082      	sub	sp, #8
  8000740:	af00      	add	r7, sp, #0
  8000742:	6078      	str	r0, [r7, #4]
 	itoa(digit, buff, 10);
  8000744:	220a      	movs	r2, #10
- 8000746:	4904      	ldr	r1, [pc, #16]	; (8000758 <digitToASCII+0x1c>)
+ 8000746:	4904      	ldr	r1, [pc, #16]	; (8000758 <intToString+0x1c>)
  8000748:	6878      	ldr	r0, [r7, #4]
  800074a:	f002 f907 	bl	800295c <itoa>
 	return buff;
- 800074e:	4b02      	ldr	r3, [pc, #8]	; (8000758 <digitToASCII+0x1c>)
+ 800074e:	4b02      	ldr	r3, [pc, #8]	; (8000758 <intToString+0x1c>)
 }
  8000750:	4618      	mov	r0, r3
  8000752:	3708      	adds	r7, #8
@@ -802,9 +802,9 @@ void updateLCD(){
  800076c:	4916      	ldr	r1, [pc, #88]	; (80007c8 <updateLCD+0x6c>)
  800076e:	4815      	ldr	r0, [pc, #84]	; (80007c4 <updateLCD+0x68>)
  8000770:	f7ff ff9e 	bl	80006b0 <TextLCD_Puts>
-	TextLCD_Puts(&LCD, digitToASCII(thermistorTemp));
+	TextLCD_Puts(&LCD, intToString(thermistorTemp));
  8000774:	6878      	ldr	r0, [r7, #4]
- 8000776:	f7ff ffe1 	bl	800073c <digitToASCII>
+ 8000776:	f7ff ffe1 	bl	800073c <intToString>
  800077a:	4603      	mov	r3, r0
  800077c:	4619      	mov	r1, r3
  800077e:	4811      	ldr	r0, [pc, #68]	; (80007c4 <updateLCD+0x68>)
@@ -815,11 +815,11 @@ void updateLCD(){
  8000784:	4911      	ldr	r1, [pc, #68]	; (80007cc <updateLCD+0x70>)
  8000786:	480f      	ldr	r0, [pc, #60]	; (80007c4 <updateLCD+0x68>)
  8000788:	f7ff ff92 	bl	80006b0 <TextLCD_Puts>
-	TextLCD_Puts(&LCD, digitToASCII(DHT11Temp));
+	TextLCD_Puts(&LCD, intToString(DHT11Temp));
  800078c:	4b10      	ldr	r3, [pc, #64]	; (80007d0 <updateLCD+0x74>)
  800078e:	681b      	ldr	r3, [r3, #0]
  8000790:	4618      	mov	r0, r3
- 8000792:	f7ff ffd3 	bl	800073c <digitToASCII>
+ 8000792:	f7ff ffd3 	bl	800073c <intToString>
  8000796:	4603      	mov	r3, r0
  8000798:	4619      	mov	r1, r3
  800079a:	480a      	ldr	r0, [pc, #40]	; (80007c4 <updateLCD+0x68>)
@@ -830,11 +830,11 @@ void updateLCD(){
  80007a0:	490c      	ldr	r1, [pc, #48]	; (80007d4 <updateLCD+0x78>)
  80007a2:	4808      	ldr	r0, [pc, #32]	; (80007c4 <updateLCD+0x68>)
  80007a4:	f7ff ff84 	bl	80006b0 <TextLCD_Puts>
-	TextLCD_Puts(&LCD, digitToASCII(setTemp));
+	TextLCD_Puts(&LCD, intToString(setTemp));
  80007a8:	4b0b      	ldr	r3, [pc, #44]	; (80007d8 <updateLCD+0x7c>)
  80007aa:	681b      	ldr	r3, [r3, #0]
  80007ac:	4618      	mov	r0, r3
- 80007ae:	f7ff ffc5 	bl	800073c <digitToASCII>
+ 80007ae:	f7ff ffc5 	bl	800073c <intToString>
  80007b2:	4603      	mov	r3, r0
  80007b4:	4619      	mov	r1, r3
  80007b6:	4803      	ldr	r0, [pc, #12]	; (80007c4 <updateLCD+0x68>)
