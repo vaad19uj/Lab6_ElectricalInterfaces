@@ -78,9 +78,13 @@ int16_t ReadAnalogTemp(){
 	}
 	HAL_ADC_Stop(&hadc1);
 
+	int16_t temp = 0;
+
 	// thermistor resistance
 
 	// calculate temperature
+
+	return temp;
 }
 
 int16_t Read_DHT11_bit_raw(){
@@ -184,10 +188,12 @@ void updateLCD(){
 	TextLCD_Puts(&LCD, intToString(setTemp));
 
 	// thermistor
+	thermistorTemp = ReadAnalogTemp();
 	TextLCD_Puts(&LCD, "th: ");
 	TextLCD_Puts(&LCD, intToString(thermistorTemp));
 
 	// DHT11
+	DHT11Temp = Read_DHT11();
 	TextLCD_Puts(&LCD, " DHT: ");
 	TextLCD_Puts(&LCD, intToString(DHT11Temp));
 }
