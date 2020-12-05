@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "LCD.h"
 #include <stdlib.h>
+#include <math.h>
 
 /* USER CODE END Includes */
 
@@ -48,7 +49,7 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 int channel_0 = 0;
-int setTemp = 15;
+int setTemp = 20;
 int DHT11Temp = 0;
 int thermistorTemp = 0;
 TextLCDType LCD;
@@ -79,10 +80,12 @@ int16_t ReadAnalogTemp(){
 	HAL_ADC_Stop(&hadc1);
 
 	int16_t temp = 0;
-
-	// thermistor resistance
+	int beta = 3450;
+	int rt = 0;	// ???
+	int r25 = 1000; // ???
 
 	// calculate temperature
+	temp = beta/(log(rt/r25) + (beta/298.15));
 
 	return temp;
 }
@@ -110,8 +113,9 @@ int16_t Read_DHT11_bit_raw(){
 }
 
 int16_t Read_DHT11(){
-	uint16_t cnt;
+	uint16_t cnt = 0;
 
+	//HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, SET);
 	HAL_Delay(100);
 	HAL_GPIO_WritePin(DHT11_GPIO_Port, DHT11_Pin, RESET);
 	HAL_Delay(20);
@@ -159,7 +163,7 @@ int16_t Read_DHT11(){
 
 
 void heaterLED(){
-	if(DHT11Temp < setTemp){
+	if(DHT11Temp < setTemp && DHT11Temp != -99){
 		// turn on LEDs
 		HAL_GPIO_WritePin(LED_HEATER_1_GPIO_Port, LED_HEATER_1_Pin, SET);
 		HAL_GPIO_WritePin(LED_HEATER_2_GPIO_Port, LED_HEATER_2_Pin, SET);
@@ -184,17 +188,18 @@ void updateLCD(){
 	TextLCD_Clear(&LCD);
 
 	// set temperature
-	TextLCD_Puts(&LCD, " set: ");
+	TextLCD_Puts(&LCD, "set:");
 	TextLCD_Puts(&LCD, intToString(setTemp));
 
 	// thermistor
 	thermistorTemp = ReadAnalogTemp();
-	TextLCD_Puts(&LCD, "th: ");
+	TextLCD_Puts(&LCD, " th:");
 	TextLCD_Puts(&LCD, intToString(thermistorTemp));
 
 	// DHT11
+	TextLCD_Position(&LCD, 1, 0);
 	DHT11Temp = Read_DHT11();
-	TextLCD_Puts(&LCD, " DHT: ");
+	TextLCD_Puts(&LCD, " DHT11:");
 	TextLCD_Puts(&LCD, intToString(DHT11Temp));
 }
 
@@ -242,6 +247,7 @@ int main(void)
 	{
 		updateLCD();
 		heaterLED();
+		HAL_Delay(1000);
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
@@ -446,13 +452,27 @@ static void MX_GPIO_Init(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+	/* EXTI interrupt init*/
+	HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
 }
 
 /* USER CODE BEGIN 4 */
 
 // Buttons
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	//test interrupt
+	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, SET);
+
+	if(GPIO_Pin == B1_Pin){
+		setTemp += 1;
+	}
 	if(GPIO_Pin == BTN_DOWN_Pin){
+
 		setTemp-=1;
 
 		if(setTemp < 15)
