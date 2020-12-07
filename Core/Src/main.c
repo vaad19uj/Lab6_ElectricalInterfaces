@@ -54,7 +54,7 @@ ADC_HandleTypeDef hadc1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-int channel_0 = 0;
+float channel_0 = 0;
 int setTemp = 20;
 int DHT11Temp = 0;
 int thermistorTemp = 0;
@@ -88,13 +88,19 @@ int16_t ReadAnalogTemp(){
 	}
 	HAL_ADC_Stop(&hadc1);
 
-	int16_t temp = 0;
-	int beta = 3450;
-	int rt = 0;	// ???
-	int r25 = 1000; // ???
+	int16_t temp = 0.0;
+	int beta = 3450.0;
+	int rt = 0.0;
+	int r25 = 1000.0;
+	int vs = 5.0;
+
+	int vout = (channel_0/4095.0)*3.3;
+
+	// thermistor resistance
+	rt = (r25*vs / vout)-r25;
 
 	// calculate temperature
-	temp = beta/(log(rt/r25) + (beta/298.15));
+	temp = beta/(log(rt/r25) + (beta/298.15))-273.15;
 
 	return temp;
 }
