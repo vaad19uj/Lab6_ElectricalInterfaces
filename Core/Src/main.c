@@ -31,6 +31,12 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
+typedef enum{
+	UNFILTERED_PRESSED_DOWN_BUTTON_EVENT,
+	UNFILTERED_PRESSED_UP_BUTTON_EVENT,
+	FILTERED_PRESSED_BUTTON_EVENT
+} event_e;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -54,6 +60,8 @@ int DHT11Temp = 0;
 int thermistorTemp = 0;
 TextLCDType LCD;
 
+event_e eventButton;
+
 uint16_t DHT11_timeout = 10000;
 int16_t DHT11_buff_raw[41];
 uint8_t DHT11_data[5];
@@ -72,6 +80,7 @@ static void MX_ADC1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 int16_t ReadAnalogTemp(){
 	HAL_ADC_Start(&hadc1);
 	if(HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY) == HAL_OK){
@@ -181,8 +190,34 @@ char* intToString(int digit){
 	return buff;
 }
 
+/*void buttons(){
+	if(eventButton == UNFILTERED_PRESSED_DOWN_BUTTON_EVENT){
+		HAL_Delay(30);
+
+		if(HAL_GPIO_ReadPin(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == 1){
+			setTemp-=1;
+			if(setTemp < 15)
+				setTemp = 15;
+		}
+		eventButton = FILTERED_PRESSED_BUTTON_EVENT;
+	}
+
+	if(eventButton == UNFILTERED_PRESSED_UP_BUTTON_EVENT){
+		HAL_Delay(30);
+
+		if(HAL_GPIO_ReadPin(BTN_UP_GPIO_Port, BTN_UP_Pin) == 1){
+			setTemp+=1;
+			if(setTemp > 30)
+				setTemp = 30;
+		}
+		eventButton = FILTERED_PRESSED_BUTTON_EVENT;
+	}
+}	*/
+
 void updateLCD(){
 	// print out values on LCD
+
+	//buttons();
 
 	// position 0
 	TextLCD_Clear(&LCD);
@@ -449,7 +484,7 @@ static void MX_GPIO_Init(void)
 	/*Configure GPIO pins : BTN_UP_Pin BTN_DOWN_Pin */
 	GPIO_InitStruct.Pin = BTN_UP_Pin|BTN_DOWN_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	/* EXTI interrupt init*/
@@ -472,7 +507,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 		setTemp += 1;
 	}
 	if(GPIO_Pin == BTN_DOWN_Pin){
-
+		//eventButton = UNFILTERED_PRESSED_DOWN_BUTTON_EVENT;
 		setTemp-=1;
 
 		if(setTemp < 15)
@@ -480,6 +515,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	}
 
 	if(GPIO_Pin == BTN_UP_Pin){
+		//eventButton = UNFILTERED_PRESSED_UP_BUTTON_EVENT;
 		setTemp+=1;
 
 		if(setTemp > 30)
